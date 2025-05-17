@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-sans text-airline-gray-800 bg-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight text-airline-blue-900;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl xl:text-6xl leading-tight;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl leading-tight;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl leading-tight;
+  }
+  
+  h4 {
+    @apply text-xl md:text-2xl leading-snug;
+  }
+  
+  p {
+    @apply leading-relaxed;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-5 py-3 rounded-md font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply btn bg-airline-gold-500 hover:bg-airline-gold-600 text-white focus:ring-airline-gold-500;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-airline-blue-800 hover:bg-airline-blue-900 text-white focus:ring-airline-blue-800;
+  }
+  
+  .btn-outlined {
+    @apply btn bg-transparent border-2 border-airline-gold-500 text-airline-gold-500 hover:bg-airline-gold-500 hover:text-white focus:ring-airline-gold-500;
+  }
+  
+  .form-input {
+    @apply w-full px-4 py-3 rounded-md bg-white border border-airline-gray-200 focus:border-airline-gold-500 focus:ring-2 focus:ring-airline-gold-200 focus:outline-none transition-all duration-300;
+  }
+  
+  .section {
+    @apply py-16 md:py-24;
+  }
+  
+  .container-custom {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .nav-scrolled {
+    @apply bg-white bg-opacity-95 shadow-airline backdrop-blur-sm;
+  }
+}

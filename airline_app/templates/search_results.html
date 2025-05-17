@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Flight Search Results{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="container mx-auto px-4">
+        <!-- Search Form -->
+        <div class="max-w-4xl mx-auto mb-8 bg-white rounded-lg shadow-lg p-6">
+            <form method="get" action="{% url 'search_flights_view' %}" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            From
+                        </label>
+                        {{ form.source }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            To
+                        </label>
+                        {{ form.destination }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Departure Date
+                        </label>
+                        {{ form.departure }}
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="submit" class="bg-airline-gold-500 text-white py-2 px-6 rounded-md hover:bg-airline-gold-600 transition duration-300">
+                        Search Again
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results -->
+        <div class="max-w-4xl mx-auto">
+            {% if flights %}
+                <h2 class="text-2xl font-bold mb-6">Available Flights</h2>
+                <div class="space-y-4">
+                    {% for flight in flights %}
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition duration-300">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                            <div>
+                                <p class="text-sm text-gray-600">Flight</p>
+                                <p class="font-semibold">{{ flight.flight_number }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">From - To</p>
+                                <p class="font-semibold">{{ flight.source.city }} - {{ flight.destination.city }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Departure</p>
+                                <p class="font-semibold">{{ flight.departure|date:"M d, Y H:i" }}</p>
+                            </div>
+                            {% if flight.id %}
+                            <div class="flex justify-end">
+                                <a href="{% url 'flight_detail' flight.id %}" 
+                                   class="bg-airline-blue-900 text-white py-2 px-4 rounded hover:bg-airline-blue-800 transition duration-300">
+                                    View Details
+                                </a>
+                            {% else %}
+                                <p>Invalid flight record — no ID.</p>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 mx-auto mb-4 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">No Flights Found</h3>
+                    <p class="text-gray-600">Try different search criteria or dates.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

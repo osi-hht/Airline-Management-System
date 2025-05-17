@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Flight {{ flight.flight_number }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-airline-blue-900 text-white px-6 py-4">
+                    <h1 class="text-2xl font-bold">Book Flight {{ flight.flight_number }}</h1>
+                </div>
+                
+                <div class="p-6">
+                    <!-- Flight Summary -->
+                    <div class="mb-8 p-4 bg-gray-50 rounded-lg">
+                        <h2 class="text-lg font-semibold mb-4">Flight Details</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-600">From</p>
+                                <p class="font-medium">{{ flight.source.name }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">To</p>
+                                <p class="font-medium">{{ flight.destination.name }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Departure</p>
+                                <p class="font-medium">{{ flight.departure|date:"M d, Y H:i" }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Arrival</p>
+                                <p class="font-medium">{{ flight.arrival|date:"M d, Y H:i" }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Booking Form -->
+                    <form method="post" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                        <div>
+                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% if field.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ field.errors.0 }}
+                            </p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="mt-8">
+                            <button type="submit" 
+                                    class="w-full bg-airline-gold-500 text-white py-3 px-6 rounded-md hover:bg-airline-gold-600 transition duration-300 font-semibold">
+                                Confirm Booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

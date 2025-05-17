@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ flight.flight_number }} - Flight Details{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-airline-blue-900 text-white px-6 py-4">
+                <h1 class="text-2xl font-bold">Flight {{ flight.flight_number }}</h1>
+            </div>
+            
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h2 class="text-lg font-semibold mb-4">Flight Information</h2>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-gray-600">From:</span>
+                                <p class="font-medium">{{ flight.source.name }}, {{ flight.source.city }}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">To:</span>
+                                <p class="font-medium">{{ flight.destination.name }}, {{ flight.destination.city }}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Departure:</span>
+                                <p class="font-medium">{{ flight.departure|date:"l, F j, Y" }}<br>{{ flight.departure|date:"g:i A" }}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Arrival:</span>
+                                <p class="font-medium">{{ flight.arrival|date:"l, F j, Y" }}<br>{{ flight.arrival|date:"g:i A" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="text-lg font-semibold mb-4">Aircraft Details</h2>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-gray-600">Aircraft:</span>
+                                <p class="font-medium">{{ flight.aircraft.model }}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Manufacturer:</span>
+                                <p class="font-medium">{{ flight.aircraft.manufacturer }}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Capacity:</span>
+                                <p class="font-medium">{{ flight.aircraft.capacity }} passengers</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <a href="{% url 'book_flight' flight.id %}" 
+                       class="inline-block bg-airline-gold-500 text-white py-3 px-8 rounded-md hover:bg-airline-gold-600 transition duration-300 font-semibold">
+                        Book This Flight
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

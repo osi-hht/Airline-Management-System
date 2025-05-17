@@ -49,7 +49,7 @@ ROOT_URLCONF = 'airline_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'airline_app' / 'templates'],  # Custom templates dir
+        'DIRS': [BASE_DIR / 'templates'],  # Make sure it points to 'templates' directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
