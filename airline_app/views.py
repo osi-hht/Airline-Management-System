@@ -371,7 +371,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignupForm, LoginForm, FlightSearchForm, BookingForm
+from .forms import SignupForm, LoginForm, FlightSearchForm, CombinedBookingForm
 from .models import Flight, Passenger, Booking, Ticket, Payment
 
 # Signup view
@@ -429,51 +429,76 @@ def search_flights_view(request):
             Source_Airport=source,
             Destination_Airport=destination
         )
+        print("Flights found:", flights)
+        for f in flights:
+            print("Flight ID:", f.Flight_ID)  # fixed here
+
         if departure:
             flights = flights.filter(departure_time__date=departure)
 
     return render(request, 'search_results.html', {'form': form, 'flights': flights})
 
+
 # Flight detail view — show full info of selected flight
 def flight_detail(request, flight_id):
-    flight = get_object_or_404(Flight, id=flight_id)
+    flight = get_object_or_404(Flight, Flight_ID=flight_id)
     return render(request, 'flight_detail.html', {'flight': flight})
 
 # Book flight view — passenger form + seat select, allow guest or logged-in user
 def book_flight(request, flight_id):
-    flight = get_object_or_404(Flight, id=flight_id)
-
-    initial_data = {}
-    if request.user.is_authenticated:
-        try:
-            passenger = Passenger.objects.get(user=request.user)
-            initial_data = {
-                'first_name': passenger.first_name,
-                'last_name': passenger.last_name,
-                'dob': passenger.dob,
-                'gender': passenger.gender,
-                'phone': passenger.phone,
-                'address': passenger.address,
-                'email': passenger.email,
-            }
-        except Passenger.DoesNotExist:
-            pass
+    flight = get_object_or_404(Flight, Flight_ID=flight_id)
 
     if request.method == 'POST':
-        form = BookingForm(request.POST, initial=initial_data)
+        form = CombinedBookingForm(request.POST)
         if form.is_valid():
-            booking = form.save(commit=False)
-            booking.flight = flight
-            if request.user.is_authenticated:
-                try:
-                    booking.passenger = Passenger.objects.get(user=request.user)
-                except Passenger.DoesNotExist:
-                    # For logged in user without passenger profile
-                    pass
+            # Check if passenger already exists (by email)
+            passenger, created = Passenger.objects.get_or_create(
+                email=form.cleaned_data['email'],
+                defaults={
+                    'Name': form.cleaned_data['name'],
+                    'Date_of_Birth': form.cleaned_data['date_of_birth'],
+                    'Phone_Number': form.cleaned_data['phone_number'],
+                    'Address': form.cleaned_data['address'],
+                    'gender': form.cleaned_data['gender'],
+                    'passport_Number': form.cleaned_data['passport_number'],
+                }
+            )
+            if not created:
+                # Update passenger info if needed
+                passenger.Name = form.cleaned_data['name']
+                passenger.Date_of_Birth = form.cleaned_data['date_of_birth']
+                passenger.Phone_Number = form.cleaned_data['phone_number']
+                passenger.Address = form.cleaned_data['address']
+                passenger.gender = form.cleaned_data['gender']
+                passenger.passport_Number = form.cleaned_data['passport_number']
+                passenger.save()
+
+            # Create the booking linked to passenger and flight
+            booking = Booking(
+                flight=flight,
+                passenger=passenger,
+                seat_number=form.cleaned_data['seat_number']
+            )
             booking.save()
             return redirect('confirm_booking_view', booking_id=booking.id)
     else:
-        form = BookingForm(initial=initial_data)
+        # Prefill form if user is logged in and passenger exists
+        initial_data = {}
+        if request.user.is_authenticated:
+            try:
+                passenger = Passenger.objects.get(email=request.user.email)
+                initial_data = {
+                    'name': passenger.Name,
+                    'date_of_birth': passenger.Date_of_Birth,
+                    'phone_number': passenger.Phone_Number,
+                    'address': passenger.Address,
+                    'gender': passenger.gender,
+                    'email': passenger.email,
+                    'passport_number': passenger.passport_Number,
+                }
+            except Passenger.DoesNotExist:
+                pass
+        form = CombinedBookingForm(initial=initial_data)
 
     return render(request, 'book_flight.html', {'form': form, 'flight': flight})
 

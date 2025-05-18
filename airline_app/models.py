@@ -222,6 +222,179 @@
 #     # );
 
 
+# from django.db import models
+
+# # ---------------------------
+# # AIRPORT
+# # ---------------------------
+# class Airport(models.Model):
+#     Airport_ID = models.AutoField(primary_key=True)
+#     Airport_Name = models.CharField(max_length=100, default='Unnamed Airport')
+#     Location = models.CharField(max_length=100, default='Unknown Location')
+#     Country = models.CharField(max_length=100, default='Unknown Country')
+
+#     def __str__(self):
+#         return self.Airport_Name
+
+
+# # ---------------------------
+# # AIRCRAFT
+# # ---------------------------
+# class Aircraft(models.Model):
+#     Aircraft_ID = models.AutoField(primary_key=True)
+#     Model = models.CharField(max_length=100, default='Generic Model')
+#     Manufacturer = models.CharField(max_length=100, default='Generic Manufacturer')
+#     Capacity = models.PositiveIntegerField(default=100)
+
+#     def __str__(self):
+#         return self.Model
+
+
+# # ---------------------------
+# # FLIGHT
+# # ---------------------------
+# class Flight(models.Model):
+#     Flight_ID = models.AutoField(primary_key=True)
+#     Flight_Number = models.CharField(max_length=10, unique=True, default='FN000')
+#     Source_Airport = models.ForeignKey(Airport, related_name='source_flights', on_delete=models.CASCADE, default='Unnamed Airport')
+#     Destination_Airport = models.ForeignKey(Airport, related_name='destination_flights', on_delete=models.CASCADE, default='Unnamed Airport')
+#     Aircraft_ID = models.ForeignKey(Aircraft, on_delete=models.CASCADE)
+#     departure_time = models.DateTimeField(null=True, blank=True)
+#     arrival_time = models.DateTimeField(null=True, blank=True)
+
+#     def __str__(self):
+#         return self.Flight_Number
+
+
+# # ---------------------------
+# # SCHEDULE
+# # ---------------------------
+# class Schedule(models.Model):
+#     Schedule_ID = models.AutoField(primary_key=True)
+#     Date_Time = models.DateTimeField(null=True, blank=True)
+#     Flight_ID = models.ForeignKey('Flight', on_delete=models.CASCADE, null=True, blank=True)
+#     Staff_ID = models.ForeignKey('CrewMember', on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return f"Schedule {self.Schedule_ID}"
+
+
+# # ---------------------------
+# # CREW MEMBER
+# # ---------------------------
+# class CrewMember(models.Model):
+#     Crew_ID = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=100, default='Unnamed Crew')
+#     Role = models.CharField(max_length=50, default='Unknown Role')
+#     Experience = models.PositiveIntegerField(default=1)
+#     Contact_Information = models.CharField(max_length=100, default='N/A')
+
+#     def __str__(self):
+#         return self.Name
+
+
+# # ---------------------------
+# # PASSENGER
+# # ---------------------------
+# class Passenger(models.Model):
+#     Passenger_ID = models.AutoField(primary_key=True)
+#     Name = models.CharField(max_length=100, default='Unnamed Passenger')
+#     Date_of_Birth = models.DateField(null=True, blank=True)
+#     Phone_Number = models.CharField(max_length=20, null=True, blank=True)
+#     Address = models.CharField(max_length=200, null=True, blank=True)
+#     GENDER_CHOICES = [
+#         ('M', 'Male'),
+#         ('F', 'Female'),
+#         ('O', 'Other'),
+#     ]
+#     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
+#     email = models.EmailField(max_length=254, blank=True, null=True)
+#     passport_Number = models.CharField(max_length=20, unique=True, blank=True, null=True)
+
+#     def __str__(self):
+#         return self.Name
+
+
+# # ---------------------------
+# # BOOKING
+# # ---------------------------
+# class Booking(models.Model):
+#     Booking_ID = models.AutoField(primary_key=True)
+#     Passenger_ID = models.ForeignKey(Passenger, on_delete=models.CASCADE)
+#     Flight_ID = models.ForeignKey(Flight, on_delete=models.CASCADE)
+#     booking_date = models.DateTimeField(auto_now_add=True)
+#     seat_number = models.CharField(max_length=5, blank=True, null=True)
+
+#     def __str__(self):
+#         return f"Booking {self.Booking_ID}"
+
+
+# # ---------------------------
+# # PAYMENT
+# # ---------------------------
+# class Payment(models.Model):
+#     Payment_ID = models.AutoField(primary_key=True, default = 0)
+#     Booking_ID = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True)
+#     Amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+#     Payment_Date = models.DateTimeField(null=True, blank=True)
+#     PAYMENT_METHOD_CHOICES = [
+#         ('CC', 'Credit Card'),
+#         ('DC', 'Debit Card'),
+#         ('PP', 'PayPal'),
+#         ('CA', 'Cash'),
+#         ('OT', 'Other'),
+#     ]
+#     Payment_Method = models.CharField(max_length=2, choices=PAYMENT_METHOD_CHOICES, default='OT')
+
+#     def __str__(self):
+#         return f"Payment {self.Payment_ID}"
+
+
+# # ---------------------------
+# # TICKET
+# # ---------------------------
+# class Ticket(models.Model):
+#     Ticket_ID = models.AutoField(primary_key=True)
+#     Booking_ID = models.ForeignKey(Booking, on_delete=models.CASCADE)
+#     Seat_Number = models.CharField(max_length=10, default='N/A')
+#     Price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
+#     Booking_Status = models.CharField(max_length=50, default='Pending')
+#     Passenger_ID = models.ForeignKey(Passenger, on_delete=models.CASCADE)
+#     Flight_ID = models.ForeignKey(Flight, on_delete=models.CASCADE)
+#     Gate_Number = models.CharField(max_length=10, blank=True, null=True)
+
+#     def __str__(self):
+#         return f"Ticket {self.Ticket_ID}"
+
+
+# # ---------------------------
+# # BAGGAGE
+# # ---------------------------
+# class Baggage(models.Model):
+#     Baggage_ID = models.AutoField(primary_key=True)
+#     Weight = models.FloatField(default=0.0)
+#     Type = models.CharField(max_length=50, default='General')
+#     Passenger_ID = models.ForeignKey(Passenger, on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return f"Baggage {self.Baggage_ID}"
+
+
+# # ---------------------------
+# # BOARDING PASS
+# # ---------------------------
+# class BoardingPass(models.Model):
+#     BoardingPass_ID = models.AutoField(primary_key=True)
+#     Booking_ID = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True)
+#     Seat_Number = models.CharField(max_length=10, null=True, blank=True)
+#     Flight_ID = models.ForeignKey(Flight, on_delete=models.CASCADE, null=True, blank=True)
+#     Passenger_ID = models.ForeignKey(Passenger, on_delete=models.CASCADE, null=True, blank=True)
+#     Barcode = models.CharField(max_length=100, default='TEMP123')
+#     boarding_time = models.DateTimeField(blank=True, null=True)
+
+#     def __str__(self):
+#         return f"Boarding Pass {self.BoardingPass_ID}"
+
 from django.db import models
 
 # ---------------------------
@@ -254,10 +427,11 @@ class Aircraft(models.Model):
 # FLIGHT
 # ---------------------------
 class Flight(models.Model):
-    Flight_ID = models.AutoField(primary_key=True)
+    Flight_ID = models.IntegerField(primary_key=True)
     Flight_Number = models.CharField(max_length=10, unique=True, default='FN000')
-    Source_Airport = models.ForeignKey(Airport, related_name='source_flights', on_delete=models.CASCADE, default='Unnamed Airport')
-    Destination_Airport = models.ForeignKey(Airport, related_name='destination_flights', on_delete=models.CASCADE, default='Unnamed Airport')
+    # Use null=True and blank=True for ForeignKey without a default value
+    Source_Airport = models.ForeignKey(Airport, related_name='source_flights', on_delete=models.CASCADE, null=True, blank=True)
+    Destination_Airport = models.ForeignKey(Airport, related_name='destination_flights', on_delete=models.CASCADE, null=True, blank=True)
     Aircraft_ID = models.ForeignKey(Aircraft, on_delete=models.CASCADE)
     departure_time = models.DateTimeField(null=True, blank=True)
     arrival_time = models.DateTimeField(null=True, blank=True)
@@ -273,7 +447,8 @@ class Schedule(models.Model):
     Schedule_ID = models.AutoField(primary_key=True)
     Date_Time = models.DateTimeField(null=True, blank=True)
     Flight_ID = models.ForeignKey('Flight', on_delete=models.CASCADE, null=True, blank=True)
-    Staff_ID = models.ForeignKey('CrewMember', on_delete=models.CASCADE)
+    # Added null=True and blank=True to avoid migration errors
+    Staff_ID = models.ForeignKey('CrewMember', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"Schedule {self.Schedule_ID}"
@@ -333,7 +508,8 @@ class Booking(models.Model):
 # PAYMENT
 # ---------------------------
 class Payment(models.Model):
-    Payment_ID = models.AutoField(primary_key=True, default = 0)
+    # Removed default=0 to avoid conflict with AutoField
+    Payment_ID = models.AutoField(primary_key=True)
     Booking_ID = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True)
     Amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     Payment_Date = models.DateTimeField(null=True, blank=True)

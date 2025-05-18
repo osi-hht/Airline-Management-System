@@ -46,25 +46,21 @@
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
                             <div>
                                 <p class="text-sm text-gray-600">Flight</p>
-                                <p class="font-semibold">{{ flight.flight_number }}</p>
+                                <p class="font-semibold">{{ flight.Flight_Number }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-600">From - To</p>
-                                <p class="font-semibold">{{ flight.source.city }} - {{ flight.destination.city }}</p>
+                                <p class="font-semibold">{{ flight.Source_Airport.city }} - {{ flight.Destination_Airport.city }}</p>
                             </div>
                             <div>
                                 <p class="text-sm text-gray-600">Departure</p>
-                                <p class="font-semibold">{{ flight.departure|date:"M d, Y H:i" }}</p>
+                                <p class="font-semibold">{{ flight.departure_time|date:"M d, Y H:i" }}</p>
                             </div>
-                            {% if flight.id %}
                             <div class="flex justify-end">
-                                <a href="{% url 'flight_detail' flight.id %}" 
+                                <a href="{% url 'flight_detail' flight.Flight_ID %}" 
                                    class="bg-airline-blue-900 text-white py-2 px-4 rounded hover:bg-airline-blue-800 transition duration-300">
                                     View Details
                                 </a>
-                            {% else %}
-                                <p>Invalid flight record — no ID.</p>
-                            {% endif %}
                             </div>
                         </div>
                     </div>

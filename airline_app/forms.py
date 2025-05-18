@@ -153,22 +153,28 @@ class PassengerForm(forms.ModelForm):
             raise forms.ValidationError("Date of birth cannot be today or in the future.")
         return dob
 
-class BookingForm(forms.ModelForm):
-    class Meta:
-        model = Booking
-        fields = ['seat_number']
-        widgets = {
-            'seat_number': forms.TextInput(attrs={
-                'placeholder': 'Enter seat number, e.g. 12A',
-                'class': 'form-control',
-            }),
-        }
+from django import forms
+from .models import Booking, Passenger
+
+class CombinedBookingForm(forms.Form):
+    # Passenger fields
+    name = forms.CharField(max_length=100, label="Full Name")
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    phone_number = forms.CharField(max_length=20, required=False)
+    address = forms.CharField(max_length=200, required=False)
+    gender = forms.ChoiceField(choices=Passenger.GENDER_CHOICES, required=False)
+    email = forms.EmailField()
+    passport_number = forms.CharField(max_length=20, required=False)
+
+    # Booking field
+    seat_number = forms.CharField(max_length=10, label="Seat Number")
 
     def clean_seat_number(self):
         seat = self.cleaned_data.get('seat_number')
         if not seat:
             raise forms.ValidationError("Seat number is required.")
         return seat
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(

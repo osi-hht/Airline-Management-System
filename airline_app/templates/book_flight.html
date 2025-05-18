@@ -36,29 +36,10 @@
                     </div>
 
                     <!-- Booking Form -->
-                    <form method="post" class="space-y-6">
+                    <form method="POST">
                         {% csrf_token %}
-                        
-                        {% for field in form %}
-                        <div>
-                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-                                {{ field.label }}
-                            </label>
-                            {{ field }}
-                            {% if field.errors %}
-                            <p class="mt-1 text-sm text-red-600">
-                                {{ field.errors.0 }}
-                            </p>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-
-                        <div class="mt-8">
-                            <button type="submit" 
-                                    class="w-full bg-airline-gold-500 text-white py-3 px-6 rounded-md hover:bg-airline-gold-600 transition duration-300 font-semibold">
-                                Confirm Booking
-                            </button>
-                        </div>
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Book Flight</button>
                     </form>
                 </div>
             </div>
